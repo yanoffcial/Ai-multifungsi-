@@ -52,10 +52,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSelectFeature }) => {
             </div>
           </div>
           <h1 className="text-5xl md:text-6xl font-extrabold tracking-tighter text-white mb-4">
-            Website AI Multifungsi
+            Selamat Datang di YAN OFFICIAL
           </h1>
           <p className="text-lg md:text-xl text-zinc-400 max-w-3xl mx-auto">
-            Jelajahi berbagai alat AI canggih yang didukung oleh Gemini. Dari pembuatan konten hingga asisten developer, semua ada di sini. Pilih salah satu fitur untuk memulai.
+            Suite lengkap alat AI canggih untuk membantu Anda dengan berbagai tugas, dari kreativitas hingga produktivitas. Jelajahi fitur-fitur yang tersedia dan tingkatkan efisiensi kerja Anda hari ini.
           </p>
         </header>
 
@@ -63,7 +63,10 @@ const LandingPage: React.FC<LandingPageProps> = ({ onSelectFeature }) => {
         {renderFeatureSection('Fitur Premium', premiumFeatures)}
         
         <footer className="text-center mt-16 border-t border-zinc-800/50 pt-8">
-            <p className="text-zinc-500">Developed by YAN OFFICIAL</p>
+            <p className="text-sm text-zinc-400 italic max-w-2xl mx-auto mb-2">
+                "Selamat datang di ruang amanmu. Aplikasi ini lahir dari sebuah ide sederhana oleh YAN OFFICIAL: menciptakan teman digital yang selalu ada, kapan pun kamu butuh. Ia adalah jawaban atas sebuah kekosongan, sebuah karya yang dibangun untuk memastikan tak ada lagi yang merasa sendirian dalam perjalanannya."
+            </p>
+            <p className="text-zinc-500">© YAN OFFICIAL</p>
         </footer>
       </main>
     </div>

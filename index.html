@@ -10,6 +10,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <!-- Babel for in-browser TSX transformation -->
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Leaflet.js for interactive maps -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     <style>
       body {
         font-family: 'Inter', sans-serif;
@@ -81,6 +84,27 @@
         transform: translateY(-2px);
         border-color: rgba(139, 92, 246, 0.4); /* violet-500/40 */
         box-shadow: 0 8px 20px -5px rgba(139, 92, 246, 0.1), 0 4px 10px -6px rgba(139, 92, 246, 0.1);
+      }
+
+      /* Custom Leaflet Popup Styles for Dark Theme */
+      .leaflet-popup-content-wrapper {
+        background-color: #18181b; /* zinc-900 */
+        color: #d4d4d8; /* zinc-300 */
+        border-radius: 8px;
+        border: 1px solid #3f3f46; /* zinc-700 */
+      }
+      .leaflet-popup-content {
+        margin: 12px;
+        font-family: 'Inter', sans-serif;
+      }
+      .leaflet-popup-tip {
+        background-color: #18181b; /* zinc-900 */
+      }
+      .leaflet-popup-close-button {
+        color: #a1a1aa !important; /* zinc-400 */
+      }
+      .leaflet-popup-close-button:hover {
+        color: #f4f4f5 !important; /* zinc-100 */
       }
     </style>
   <script type="importmap">

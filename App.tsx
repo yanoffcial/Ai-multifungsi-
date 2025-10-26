@@ -20,6 +20,12 @@ const App: React.FC = () => {
     }
   }, [view, selectedFeature]);
 
+  const handleGoHome = () => {
+    setView('landing');
+    setSelectedFeature(null);
+    setIsSidebarOpen(false);
+  };
+
   const handleSelectFeatureFromSidebar = useCallback((feature: Feature) => {
     if (feature.isPremium && !isPremium) {
       setSelectedFeature(feature);
@@ -78,6 +84,7 @@ const App: React.FC = () => {
             onSelectFeature={handleSelectFeatureFromSidebar} 
             isPremium={isPremium}
             isSidebarOpen={isSidebarOpen}
+            onGoHome={handleGoHome}
           />
           
           {isSidebarOpen && (

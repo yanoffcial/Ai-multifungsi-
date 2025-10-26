@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Feature } from '../types';
-import { LockClosedIcon, SparklesIcon } from './icons/FeatureIcons';
+import { LockClosedIcon, SparklesIcon, HomeIcon } from './icons/FeatureIcons';
 
 interface SidebarProps {
   features: Feature[];
@@ -8,9 +8,10 @@ interface SidebarProps {
   onSelectFeature: (feature: Feature) => void;
   isPremium: boolean;
   isSidebarOpen: boolean;
+  onGoHome: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ features, selectedFeature, onSelectFeature, isPremium, isSidebarOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({ features, selectedFeature, onSelectFeature, isPremium, isSidebarOpen, onGoHome }) => {
   const freeFeatures = features.filter(f => !f.isPremium);
   const premiumFeatures = features.filter(f => f.isPremium);
 
@@ -43,19 +44,32 @@ const Sidebar: React.FC<SidebarProps> = ({ features, selectedFeature, onSelectFe
 
   return (
     <aside className={`fixed top-0 left-0 h-full bg-zinc-900/70 backdrop-blur-lg border-r border-zinc-800/50 transition-transform duration-300 ease-in-out z-40 w-64 flex flex-col ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0`}>
-      <div className="p-4 border-b border-zinc-800 flex items-center justify-center space-x-2">
-        <SparklesIcon className="w-7 h-7 text-violet-400"/>
-        <h1 className="text-xl font-bold text-center text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
-          YAN OFFICIAL
-        </h1>
+      <div className="p-4 border-b border-zinc-800 flex items-center justify-between">
+         <div className="flex items-center space-x-2">
+            <SparklesIcon className="w-7 h-7 text-violet-400"/>
+            <h1 className="text-xl font-bold text-white bg-clip-text text-transparent bg-gradient-to-r from-white to-zinc-400">
+            YAN OFFICIAL
+            </h1>
+        </div>
       </div>
-      <nav className="flex-1 py-4 overflow-y-auto">
-        {renderFeatureList(freeFeatures, 'Free Features')}
+
+       <div className="p-2">
+           <button 
+            onClick={onGoHome}
+            className="w-full flex items-center p-2 rounded-md text-sm font-medium transition-all duration-200 group text-zinc-300 bg-zinc-800/50 hover:bg-zinc-700/50 hover:text-white border border-zinc-700"
+            >
+                <HomeIcon className="w-5 h-5 mr-3 flex-shrink-0" />
+                <span className="flex-1 text-left truncate">Kembali ke Beranda</span>
+            </button>
+       </div>
+
+      <nav className="flex-1 py-2 overflow-y-auto">
+        {renderFeatureList(freeFeatures, 'Fitur Gratis')}
         <div className="my-4 border-t border-zinc-800/50"></div>
-        {renderFeatureList(premiumFeatures, 'Premium Features')}
+        {renderFeatureList(premiumFeatures, 'Fitur Premium')}
       </nav>
        <div className="p-4 border-t border-zinc-800 text-center">
-          <p className="text-xs text-zinc-500">Developed by YAN OFFICIAL</p>
+          <p className="text-xs text-zinc-500">© YAN OFFICIAL</p>
       </div>
     </aside>
   );

@@ -1,5 +1,3 @@
-
-
 import type { Feature } from './types';
 import TemanCurhat from './features/Free/TemanCurhat';
 import AiChat from './features/Free/AiChat';
@@ -19,6 +17,11 @@ import VideoGenerator from './features/Premium/VideoGenerator';
 import TanyaWeb from './features/Premium/TanyaWeb';
 import PersonaChat from './features/Premium/PersonaChat';
 import GitHubAssistant from './features/Premium/GitHubAssistant';
+import CodePackager from './features/Premium/CodePackager';
+import EmailHeaderAnalyzer from './features/Premium/EmailHeaderAnalyzer';
+import MailComposer from './features/Free/MailComposer';
+import CodeRefiner from './features/Premium/CodeRefiner';
+import LocationFinder from './features/Premium/LocationFinder';
 
 
 import {
@@ -40,6 +43,10 @@ import {
   UserGroupIcon,
   GitHubIcon,
   PencilSquareIcon,
+  CubeTransparentIcon,
+  ShieldCheckIcon,
+  EnvelopeIcon,
+  MapIcon,
 } from './components/icons/FeatureIcons';
 
 export const ACCESS_CODES = {
@@ -66,6 +73,15 @@ export const FEATURES: Feature[] = [
     category: 'Gratis',
     Icon: ChatBubbleIcon,
     component: TemanCurhat,
+  },
+  {
+    id: 'mail-composer',
+    name: 'Mail Composer',
+    description: 'Buat draf email profesional atau santai dari poin-poin singkat.',
+    isPremium: false,
+    category: 'Gratis',
+    Icon: EnvelopeIcon,
+    component: MailComposer,
   },
   {
     id: 'text-summarizer',
@@ -133,6 +149,15 @@ export const FEATURES: Feature[] = [
 
   // --- Premium ---
   {
+    id: 'code-refiner',
+    name: 'Code Refiner',
+    description: 'Dapatkan review kode mendalam untuk menemukan bug dan meningkatkan kualitas.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: PencilSquareIcon,
+    component: CodeRefiner,
+  },
+  {
     id: 'ai-image-generator',
     name: 'AI Image Generator',
     description: 'Menghasilkan gambar artistik atau realistis dari deskripsi teks.',
@@ -174,7 +199,7 @@ export const FEATURES: Feature[] = [
     description: 'Hasilkan cerita pendek atau panjang berdasarkan ide Anda.',
     isPremium: true,
     category: 'Premium',
-    Icon: PencilSquareIcon,
+    Icon: PencilSquareIcon, // Re-using this icon as it also fits "writing"
     component: StoryWriter,
   },
    {
@@ -185,6 +210,15 @@ export const FEATURES: Feature[] = [
     category: 'Premium',
     Icon: GlobeIcon,
     component: TanyaWeb,
+  },
+  {
+    id: 'location-finder',
+    name: 'Pencari Lokasi',
+    description: 'Temukan tempat menarik di sekitar Anda atau di lokasi mana pun, didukung oleh Google Maps.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: MapIcon,
+    component: LocationFinder,
   },
   {
     id: 'persona-chat',
@@ -212,5 +246,23 @@ export const FEATURES: Feature[] = [
     category: 'Premium',
     Icon: MicrophoneIcon,
     component: LiveAiChat,
+  },
+  {
+    id: 'email-header-analyzer',
+    name: 'Email Header Analyzer',
+    description: 'Analisis jejak email dan periksa protokol keamanan untuk mendeteksi ancaman.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: ShieldCheckIcon,
+    component: EmailHeaderAnalyzer,
+  },
+  {
+    id: 'code-packager',
+    name: 'APK Builder',
+    description: 'Menganalisis package.json Anda untuk membuat APK, log build, dan semua file konfigurasi Android yang diperlukan.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: CubeTransparentIcon,
+    component: CodePackager,
   },
 ];

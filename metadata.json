@@ -1,7 +1,8 @@
 {
   "name": "YAN OFFICIAL",
-  "description": "A comprehensive suite of AI tools powered by Gemini, offering a wide range of free and premium features from content creation and summarization to real-time voice chat and video generation.",
+  "description": "Suite lengkap alat AI canggih oleh YAN OFFICIAL. Dirancang untuk membantu Anda dengan berbagai tugas, dari kreativitas hingga produktivitas.",
   "requestFramePermissions": [
-    "microphone"
+    "microphone",
+    "geolocation"
   ]
 }
