@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { editImage } from '../../services/geminiService';
 import { fileToBase64 } from '../../utils/helpers';
-import { PhotoIcon } from '../../components/icons/FeatureIcons';
+import { PhotoIcon, ArrowDownTrayIcon, XCircleIcon } from '../../components/icons/FeatureIcons';
 
 const ImageEditor: React.FC = () => {
   const [prompt, setPrompt] = useState('');
@@ -47,6 +47,30 @@ const ImageEditor: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleClear = () => {
+    setPrompt('');
+    setOriginalImageFile(null);
+    setOriginalImagePreview(null);
+    setEditedImageUrl(null);
+    setError(null);
+    setIsLoading(false);
+    const fileInput = document.getElementById('image-upload') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  };
+
+  const handleDownload = () => {
+    if (!editedImageUrl) return;
+    const link = document.createElement('a');
+    link.href = editedImageUrl;
+    const fileName = prompt.trim().toLowerCase().replace(/\s+/g, '_').slice(0, 30) || 'edited-image';
+    link.download = `${fileName}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
@@ -98,13 +122,24 @@ const ImageEditor: React.FC = () => {
                 required
               />
             </div>
-            <button
-              type="submit"
-              disabled={isLoading || !prompt.trim() || !originalImageFile}
-              className="w-full bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:shadow-none"
-            >
-              {isLoading ? 'Editing...' : "Edit Image"}
-            </button>
+            <div className="flex items-center gap-3">
+              <button
+                type="submit"
+                disabled={isLoading || !prompt.trim() || !originalImageFile}
+                className="flex-1 bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:shadow-none"
+              >
+                {isLoading ? 'Editing...' : "Edit Image"}
+              </button>
+               <button
+                  type="button"
+                  onClick={handleClear}
+                  className="p-3 bg-zinc-700 hover:bg-zinc-600 rounded-lg text-zinc-300 transition-colors disabled:opacity-50"
+                  aria-label="Clear form"
+                  disabled={isLoading}
+                >
+                  <XCircleIcon className="w-6 h-6"/>
+                </button>
+            </div>
           </form>
         </div>
 
@@ -117,7 +152,7 @@ const ImageEditor: React.FC = () => {
                 {isLoading && <div className="animate-pulse text-zinc-500">Editing your image...</div>}
                 {error && <p className="text-red-400 text-center">{error}</p>}
                 {editedImageUrl && !isLoading && (
-                    <img src={editedImageUrl} alt="Edited" className="w-full h-full object-contain animate-in fade-in-0" />
+                    <img src={editedImageUrl} alt="Edited" className="w-full h-full object-contain animate-fade-in" />
                 )}
                 {!isLoading && !editedImageUrl && !error && (
                     <div className="text-center text-zinc-500">
@@ -125,6 +160,17 @@ const ImageEditor: React.FC = () => {
                     </div>
                 )}
             </div>
+             {editedImageUrl && !isLoading && (
+              <div className="mt-4">
+                <button
+                  onClick={handleDownload}
+                  className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors shadow-[0_0_20px_rgba(34,197,94,0.4)]"
+                >
+                  <ArrowDownTrayIcon className="w-5 h-5" />
+                  Download Image
+                </button>
+              </div>
+            )}
         </div>
       </div>
     </div>

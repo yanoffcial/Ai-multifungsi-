@@ -129,7 +129,7 @@ const PersonaChat: React.FC = () => {
                     <button 
                         key={persona.id} 
                         onClick={() => setSelectedPersonaId(persona.id)}
-                        className="p-4 bg-zinc-800/50 border border-zinc-700/80 rounded-lg text-left hover:bg-zinc-700/50 hover:border-violet-500/50 transition-all transform hover:scale-[1.03]"
+                        className="p-4 bg-zinc-800/50 border border-zinc-700/80 rounded-lg text-left card-hover-effect hover:bg-zinc-700/50"
                     >
                         <persona.Icon className="w-8 h-8 text-violet-400 mb-3" />
                         <h3 className="font-semibold text-white">{persona.name}</h3>
@@ -157,7 +157,7 @@ const PersonaChat: React.FC = () => {
       </div>
       <div className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((msg, index) => (
-          <div key={index} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in-0 slide-in-from-bottom-4 duration-500`}>
+          <div key={index} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
             <div className={`max-w-xs md:max-w-md lg:max-w-2xl px-4 py-3 rounded-2xl shadow-md ${
               msg.role === 'user' 
                 ? 'bg-violet-600 text-white rounded-br-lg' 

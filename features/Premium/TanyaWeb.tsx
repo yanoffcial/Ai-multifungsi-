@@ -76,7 +76,7 @@ const TanyaWeb: React.FC = () => {
           {isLoading && <p className="text-zinc-500 animate-pulse">Mencari informasi terbaru...</p>}
           {error && <p className="text-red-400">{error}</p>}
           {result && (
-            <div className="space-y-4 animate-in fade-in-0 duration-500">
+            <div className="space-y-4 animate-fade-in">
               <MessageContent text={result.text} />
               {result.sources.length > 0 && (
                 <div className="pt-4 border-t border-zinc-700/50">

@@ -1,3 +1,4 @@
+
 import React, { useState, useRef, useEffect } from 'react';
 import { createChat } from '../../services/geminiService';
 import type { Chat } from '@google/genai';
@@ -8,7 +9,7 @@ interface Message {
   text: string;
 }
 
-const AiChat: React.FC = () => {
+const GitHubAssistant: React.FC = () => {
   const [chat, setChat] = useState<Chat | null>(null);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -16,9 +17,12 @@ const AiChat: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const systemInstruction = "You are YAN OFFICIAL, a helpful and versatile AI assistant. Answer any questions the user has accurately and concisely. You can help with a wide range of tasks, from drafting emails and writing code to brainstorming ideas and explaining complex topics.";
-    setChat(createChat(systemInstruction));
-    setMessages([{ role: 'model', text: 'Hello! I am YAN OFFICIAL, your versatile AI assistant. How can I help you today?' }]);
+    const systemInstruction = "You are an expert GitHub Assistant AI. Your purpose is to help developers with common GitHub-related tasks. You are proficient in generating high-quality README.md files, writing conventional commit messages, creating .gitignore files for various languages/frameworks, explaining code, and offering project structure advice. Your responses should be clear, concise, and formatted correctly (e.g., using Markdown for READMEs and code blocks for code).";
+    const githubChat = createChat(systemInstruction);
+    // @ts-ignore - a little hack to use a different model for this specific chat
+    githubChat.model = 'gemini-2.5-pro'; 
+    setChat(githubChat);
+    setMessages([{ role: 'model', text: "Welcome to your GitHub Assistant! How can I help you today? You can ask me to 'create a README for a Python web app', 'write a commit message for fixing a bug in the login page', or 'generate a .gitignore for a Node.js project'." }]);
   }, []);
 
   const scrollToBottom = () => {
@@ -48,9 +52,9 @@ const AiChat: React.FC = () => {
       }
     } catch (error) {
       console.error('Error sending message:', error);
-      setMessages(prev => {
+       setMessages(prev => {
           const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = 'Sorry, I encountered an error. Please try again later.';
+          newMessages[newMessages.length - 1].text = 'Sorry, I encountered an error. Please try again.';
           return newMessages;
       });
     } finally {
@@ -58,28 +62,21 @@ const AiChat: React.FC = () => {
     }
   };
   
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && !e.shiftKey) {
-      e.preventDefault();
-      handleSend();
-    }
-  };
-
   return (
     <div className="flex flex-col h-full bg-zinc-900/50 border border-zinc-800 rounded-2xl overflow-hidden shadow-2xl shadow-black/20">
       <div className="p-4 border-b border-zinc-800 backdrop-blur-sm">
-        <h2 className="text-xl font-bold text-white">AI Chat</h2>
-        <p className="text-sm text-zinc-400">Tanya apa saja, dari pengetahuan umum hingga ide kreatif.</p>
+        <h2 className="text-xl font-bold text-white">GitHub Assistant</h2>
+        <p className="text-sm text-zinc-400">Your personal AI assistant for all things GitHub.</p>
       </div>
       <div className="flex-1 p-4 overflow-y-auto space-y-4">
         {messages.map((msg, index) => (
           <div key={index} className={`flex items-end gap-2 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-in-up`}>
-            <div className={`max-w-xs md:max-w-md lg:max-w-2xl px-4 py-3 rounded-2xl shadow-md ${
+            <div className={`max-w-xs md:max-w-md lg:max-w-3xl px-4 py-3 rounded-2xl shadow-md ${
               msg.role === 'user' 
                 ? 'bg-violet-600 text-white rounded-br-lg' 
                 : 'bg-zinc-700 text-zinc-200 rounded-bl-lg'
             }`}>
-               <MessageContent text={msg.text + (isLoading && msg.role === 'model' && index === messages.length - 1 ? '...' : '')} />
+              <MessageContent text={msg.text + (isLoading && msg.role === 'model' && index === messages.length - 1 ? '...' : '')} />
             </div>
           </div>
         ))}
@@ -87,16 +84,16 @@ const AiChat: React.FC = () => {
       </div>
       <div className="p-4 border-t border-zinc-800 bg-zinc-900/50">
         <div className="flex items-center bg-zinc-800 rounded-xl ring-1 ring-zinc-700 focus-within:ring-violet-500 transition-all">
-          <input
-            type="text"
+          <textarea
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-            placeholder="Type your message here..."
-            className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none"
+            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}}
+            placeholder="Ask for a README, commit message, .gitignore file..."
+            className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none resize-none h-12 max-h-40"
+            rows={1}
             disabled={isLoading}
           />
-          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
+          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1 self-end">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>
@@ -107,4 +104,4 @@ const AiChat: React.FC = () => {
   );
 };
 
-export default AiChat;
+export default GitHubAssistant;

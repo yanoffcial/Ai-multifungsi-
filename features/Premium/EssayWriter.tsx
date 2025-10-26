@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { generateText } from '../../services/geminiService';
 
-const TONES = ['Formal', 'Casual', 'Academic', 'Creative', 'Persuasive'];
-const LENGTHS = ['Short (1-2 paragraphs)', 'Medium (3-4 paragraphs)', 'Long (5+ paragraphs)'];
+const TONES = ['Formal', 'Santai', 'Akademis', 'Kreatif', 'Persuasif'];
+const LENGTHS = ['Pendek (1-2 paragraf)', 'Sedang (3-4 paragraf)', 'Panjang (5+ paragraf)'];
 
 const EssayWriter: React.FC = () => {
   const [topic, setTopic] = useState('');
@@ -21,12 +21,12 @@ const EssayWriter: React.FC = () => {
     setEssay('');
 
     try {
-      const systemInstruction = `You are an expert essay writing assistant. Your task is to write a well-structured and coherent essay on the given topic. Adhere to the specified tone and length. The output should be high-quality and ready to use as a strong draft.`;
-      const prompt = `Write an essay about "${topic}". The tone should be ${tone}, and the length should be ${length}.`;
+      const systemInstruction = `You are an expert essay writing assistant. Your task is to write a well-structured and coherent essay on the given topic in Indonesian. Adhere to the specified tone and length. The output should be high-quality and ready to use as a strong draft.`;
+      const prompt = `Tulis sebuah esai tentang "${topic}". Gaya penulisannya harus ${tone}, dan panjangnya sekitar ${length}.`;
       const result = await generateText(prompt, systemInstruction);
       setEssay(result);
     } catch (err) {
-      setError('An error occurred. Please try again.');
+      setError('Terjadi kesalahan. Silakan coba lagi.');
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -36,7 +36,7 @@ const EssayWriter: React.FC = () => {
   return (
     <div className="flex flex-col h-full bg-zinc-900/50 border border-zinc-800 rounded-2xl p-4 md:p-6 shadow-2xl shadow-black/20">
       <div className="flex-shrink-0 mb-4">
-        <h2 className="text-xl font-bold text-white">Essay Writer</h2>
+        <h2 className="text-xl font-bold text-white">Penulis Esai</h2>
         <p className="text-sm text-zinc-400">Bantuan AI untuk menyusun draf esai, artikel, atau tugas menulis.</p>
       </div>
 
@@ -51,7 +51,7 @@ const EssayWriter: React.FC = () => {
             value={topic}
             onChange={(e) => setTopic(e.target.value)}
             className="w-full bg-zinc-950 border border-zinc-700 rounded-lg px-3 py-2 text-white placeholder-zinc-500 focus:outline-none focus:ring-2 focus:ring-violet-500 transition-colors"
-            placeholder="Contoh: The impact of AI on modern education"
+            placeholder="Contoh: Dampak AI pada pendidikan modern"
             required
           />
         </div>
@@ -78,13 +78,13 @@ const EssayWriter: React.FC = () => {
           disabled={isLoading || !topic.trim()}
           className="w-full bg-violet-600 hover:bg-violet-700 disabled:bg-zinc-800 disabled:text-zinc-500 disabled:cursor-not-allowed text-white font-bold py-3 px-4 rounded-lg transition-all transform hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center shadow-[0_0_20px_rgba(139,92,246,0.4)] disabled:shadow-none"
         >
-          {isLoading ? 'Writing...' : "Write Essay"}
+          {isLoading ? 'Menulis...' : "Tulis Esai"}
         </button>
       </form>
       
       <div className="flex-1 overflow-y-auto pr-2">
         <div className="bg-zinc-950 border border-zinc-800 rounded-lg p-4 min-h-[200px] text-zinc-300 whitespace-pre-wrap leading-relaxed">
-          {isLoading && <p className="text-zinc-500 animate-pulse">Crafting your essay...</p>}
+          {isLoading && <p className="text-zinc-500 animate-pulse">Menyusun esai Anda...</p>}
           {error && <p className="text-red-400">{error}</p>}
           {essay}
         </div>

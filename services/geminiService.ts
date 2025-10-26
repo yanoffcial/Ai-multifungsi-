@@ -1,4 +1,4 @@
-import { GoogleGenAI, GenerateContentResponse, Chat, LiveSession, LiveServerMessage, Modality, Type, FunctionDeclaration, GenerateVideosOperation } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse, Chat, LiveServerMessage, Modality, Type, FunctionDeclaration, GenerateVideosOperation } from "@google/genai";
 
 // This is a placeholder. In a real environment, the API key is set securely.
 const API_KEY = process.env.API_KEY;
@@ -79,7 +79,9 @@ export const generateWithGoogleSearch = async (prompt: string): Promise<Grounded
                 title: chunk.web.title || chunk.web.uri,
             }));
         
-        const uniqueSources = Array.from(new Map(sources.map(item => [item.uri, item])).values());
+        // FIX: Explicitly typed the Map to aid TypeScript's type inference, which was failing
+        // to correctly determine the type of the `values()` iterator. This resolves the assignment error.
+        const uniqueSources = Array.from(new Map<string, { uri: string; title: string; }>(sources.map(item => [item.uri, item])).values());
 
         return {
             text: response.text,
@@ -104,14 +106,14 @@ export const createChat = (systemInstruction?: string): Chat => {
 };
 
 // --- IMAGE GENERATION & ANALYSIS ---
-export const generateImages = async (prompt: string): Promise<string[] | null> => {
+export const generateImages = async (prompt: string, count: number = 3): Promise<string[] | null> => {
     try {
         const ai = getGenAI();
         const response = await ai.models.generateImages({
             model: 'imagen-4.0-generate-001',
             prompt: prompt,
             config: {
-                numberOfImages: 3,
+                numberOfImages: count,
                 outputMimeType: 'image/jpeg',
                 aspectRatio: '1:1',
             },
@@ -240,7 +242,7 @@ export const connectLiveChat = async (callbacks: {
     onmessage: (message: LiveServerMessage) => Promise<void>;
     onerror: (e: ErrorEvent) => void;
     onclose: (e: CloseEvent) => void;
-}): Promise<LiveSession> => {
+}) => {
     const ai = getGenAI();
     return await ai.live.connect({
         model: 'gemini-2.5-flash-native-audio-preview-09-2025',

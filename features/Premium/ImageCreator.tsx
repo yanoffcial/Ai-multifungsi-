@@ -89,7 +89,7 @@ const ImageCreator: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {imageUrls.map((url, index) => (
                     <div key={index} className="aspect-square rounded-lg overflow-hidden border border-zinc-700/50 shadow-lg">
-                        <img src={url} alt={`AI Image Generator - ${prompt} - ${index + 1}`} className="w-full h-full object-cover animate-in fade-in-0 duration-500" />
+                        <img src={url} alt={`AI Image Generator - ${prompt} - ${index + 1}`} className="w-full h-full object-cover animate-fade-in" />
                     </div>
                 ))}
             </div>

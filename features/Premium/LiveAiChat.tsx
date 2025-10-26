@@ -2,7 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { connectLiveChat } from '../../services/geminiService';
 // FIX: Use renamed 'decode' and 'encode' functions to align with documentation.
 import { decode, decodeAudioData, encode } from '../../utils/helpers';
-import type { LiveSession, LiveServerMessage, Blob as GenAiBlob } from '@google/genai';
+import type { LiveServerMessage, Blob as GenAiBlob } from '@google/genai';
+
+// FIX: Infer the LiveSession type from the connectLiveChat function's return type,
+// as it is not directly exported from the @google/genai library.
+type LiveSession = Awaited<ReturnType<typeof connectLiveChat>>;
 
 enum ConnectionState {
   DISCONNECTED,

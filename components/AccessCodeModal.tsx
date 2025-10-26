@@ -19,7 +19,7 @@ const AccessCodeModal: React.FC<AccessCodeModalProps> = ({ isOpen, onClose, onUn
 
   return (
     <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 backdrop-blur-md">
-      <div className="bg-zinc-900 rounded-2xl shadow-2xl p-8 border border-zinc-800 w-full max-w-md m-4 transform transition-all animate-in fade-in-0 zoom-in-95">
+      <div className="bg-zinc-900 rounded-2xl shadow-2xl p-8 border border-zinc-800 w-full max-w-md m-4 animate-zoom-in">
         <div className="flex justify-between items-start mb-6">
           <div>
             <h2 className="text-2xl font-bold text-white">Unlock Premium</h2>

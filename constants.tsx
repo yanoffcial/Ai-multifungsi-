@@ -1,3 +1,5 @@
+
+
 import type { Feature } from './types';
 import TemanCurhat from './features/Free/TemanCurhat';
 import AiChat from './features/Free/AiChat';
@@ -11,9 +13,12 @@ import CodeAssistant from './features/Free/CodeAssistant';
 import AudioTranscriber from './features/Free/AudioTranscriber';
 import ImageAnalyzer from './features/Free/ImageAnalyzer';
 import EssayWriter from './features/Premium/EssayWriter';
+import StoryWriter from './features/Premium/StoryWriter';
 import ImageEditor from './features/Premium/ImageEditor';
+import VideoGenerator from './features/Premium/VideoGenerator';
 import TanyaWeb from './features/Premium/TanyaWeb';
 import PersonaChat from './features/Premium/PersonaChat';
+import GitHubAssistant from './features/Premium/GitHubAssistant';
 
 
 import {
@@ -30,8 +35,11 @@ import {
   BookOpenIcon,
   PaintBrushIcon,
   WaveformIcon,
+  VideoCameraIcon,
   GlobeIcon,
   UserGroupIcon,
+  GitHubIcon,
+  PencilSquareIcon,
 } from './components/icons/FeatureIcons';
 
 export const ACCESS_CODES = {
@@ -143,13 +151,31 @@ export const FEATURES: Feature[] = [
     component: ImageEditor,
   },
   {
+    id: 'video-generator',
+    name: 'Video Generator',
+    description: 'Buat video pendek dari gambar dan teks.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: VideoCameraIcon,
+    component: VideoGenerator,
+  },
+  {
     id: 'essay-writer',
-    name: 'Essay Writer',
+    name: 'Penulis Esai',
     description: 'Bantuan AI untuk menyusun draf esai, artikel, atau tugas menulis.',
     isPremium: true,
     category: 'Premium',
     Icon: BookOpenIcon,
     component: EssayWriter,
+  },
+  {
+    id: 'story-writer',
+    name: 'Story Writer',
+    description: 'Hasilkan cerita pendek atau panjang berdasarkan ide Anda.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: PencilSquareIcon,
+    component: StoryWriter,
   },
    {
     id: 'tanya-web',
@@ -168,6 +194,15 @@ export const FEATURES: Feature[] = [
     category: 'Premium',
     Icon: UserGroupIcon,
     component: PersonaChat,
+  },
+  {
+    id: 'github-assistant',
+    name: 'GitHub Assistant',
+    description: 'Generate READMEs, commit messages, .gitignore files, and more.',
+    isPremium: true,
+    category: 'Premium',
+    Icon: GitHubIcon,
+    component: GitHubAssistant,
   },
   {
     id: 'live-ai-chat',
