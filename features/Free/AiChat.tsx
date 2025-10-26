@@ -14,11 +14,19 @@ const AiChat: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(true);
 
   useEffect(() => {
     const systemInstruction = "You are YAN OFFICIAL, a helpful and versatile AI assistant. Answer any questions the user has accurately and concisely. You can help with a wide range of tasks, from drafting emails and writing code to brainstorming ideas and explaining complex topics.";
-    setChat(createChat(systemInstruction));
-    setMessages([{ role: 'model', text: 'Hello! I am YAN OFFICIAL, your versatile AI assistant. How can I help you today?' }]);
+    const newChat = createChat(systemInstruction);
+
+    if (newChat) {
+      setChat(newChat);
+      setMessages([{ role: 'model', text: 'Hello! I am YAN OFFICIAL, your versatile AI assistant. How can I help you today?' }]);
+    } else {
+      setIsServiceAvailable(false);
+      setMessages([{ role: 'model', text: 'Sorry, the AI Chat service is currently unavailable. The API Key may not be configured for this website.' }]);
+    }
   }, []);
 
   const scrollToBottom = () => {
@@ -50,7 +58,8 @@ const AiChat: React.FC = () => {
       console.error('Error sending message:', error);
       setMessages(prev => {
           const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = 'Sorry, I encountered an error. Please try again later.';
+          const errorMessage = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again later.';
+          newMessages[newMessages.length - 1].text = errorMessage;
           return newMessages;
       });
     } finally {
@@ -92,11 +101,11 @@ const AiChat: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Type your message here..."
+            placeholder={isServiceAvailable ? "Type your message here..." : "Service unavailable"}
             className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none"
-            disabled={isLoading}
+            disabled={isLoading || !isServiceAvailable}
           />
-          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
+          <button onClick={handleSend} disabled={isLoading || !input.trim() || !isServiceAvailable} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>

@@ -36,18 +36,25 @@ const StoryWriter: React.FC = () => {
 
       if (generateImage) {
         setIsImageLoading(true);
-        const imagePrompt = `An illustration for a ${genre} story about: ${prompt}. Cinematic, vibrant, digital art style.`;
-        const imageResult = await generateImages(imagePrompt, 1);
-        
-        if (imageResult && imageResult.length > 0) {
-            setImageUrl(imageResult[0]);
-        } else {
-            console.error('Image generation failed but story was successful.');
+        try {
+            const imagePrompt = `An illustration for a ${genre} story about: ${prompt}. Cinematic, vibrant, digital art style.`;
+            const imageResult = await generateImages(imagePrompt, 1);
+            
+            if (imageResult && imageResult.length > 0) {
+                setImageUrl(imageResult[0]);
+            } else {
+                console.error('Image generation failed but story was successful.');
+            }
+        } catch (imageErr) {
+             console.error('Image generation failed:', imageErr);
+             // Non-critical error, so we just log it and don't show it to the user
+        } finally {
+            setIsImageLoading(false);
         }
-        setIsImageLoading(false);
       }
     } catch (err) {
-      setError('An error occurred while writing the story. Please try again.');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred while writing the story. Please try again.';
+      setError(errorMessage);
       console.error(err);
       setIsLoading(false);
       setIsImageLoading(false);

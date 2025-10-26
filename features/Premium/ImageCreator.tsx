@@ -24,7 +24,8 @@ const ImageCreator: React.FC = () => {
         setError('Gagal membuat gambar. Coba prompt yang berbeda.');
       }
     } catch (err) {
-      setError('Terjadi kesalahan. Silakan coba lagi.');
+      const errorMessage = err instanceof Error ? err.message : 'Terjadi kesalahan. Silakan coba lagi.';
+      setError(errorMessage);
       console.error(err);
     } finally {
       setIsLoading(false);

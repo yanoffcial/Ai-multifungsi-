@@ -67,13 +67,22 @@ const PersonaChat: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(true);
   
   const selectedPersona = PERSONAS.find(p => p.id === selectedPersonaId);
 
   useEffect(() => {
     if (selectedPersona) {
-      setChat(createChat(selectedPersona.systemInstruction));
-      setMessages([{ role: 'model', text: selectedPersona.welcomeMessage }]);
+      const newChat = createChat(selectedPersona.systemInstruction);
+      if (newChat) {
+        setChat(newChat);
+        setMessages([{ role: 'model', text: selectedPersona.welcomeMessage }]);
+        setIsServiceAvailable(true);
+      } else {
+        setChat(null);
+        setMessages([{ role: 'model', text: `Maaf, layanan chat dengan ${selectedPersona.name} tidak tersedia saat ini karena masalah konfigurasi API Key.` }]);
+        setIsServiceAvailable(false);
+      }
     } else {
       setChat(null);
       setMessages([]);
@@ -108,7 +117,8 @@ const PersonaChat: React.FC = () => {
       console.error('Error sending message:', error);
       setMessages(prev => {
           const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = 'Sorry, I encountered an error. Please try again later.';
+          const errorMessage = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again later.';
+          newMessages[newMessages.length - 1].text = errorMessage;
           return newMessages;
       });
     } finally {
@@ -176,11 +186,11 @@ const PersonaChat: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}}
-            placeholder={`Ketik pesan untuk ${selectedPersona.name}...`}
+            placeholder={isServiceAvailable ? `Ketik pesan untuk ${selectedPersona.name}...` : "Layanan tidak tersedia"}
             className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none"
-            disabled={isLoading}
+            disabled={isLoading || !isServiceAvailable}
           />
-          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
+          <button onClick={handleSend} disabled={isLoading || !input.trim() || !isServiceAvailable} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>

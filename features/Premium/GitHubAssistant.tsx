@@ -1,4 +1,5 @@
 
+
 import React, { useState, useRef, useEffect } from 'react';
 import { createChat } from '../../services/geminiService';
 import type { Chat } from '@google/genai';
@@ -15,14 +16,21 @@ const GitHubAssistant: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(true);
 
   useEffect(() => {
     const systemInstruction = "You are an expert GitHub Assistant AI. Your purpose is to help developers with common GitHub-related tasks. You are proficient in generating high-quality README.md files, writing conventional commit messages, creating .gitignore files for various languages/frameworks, explaining code, and offering project structure advice. Your responses should be clear, concise, and formatted correctly (e.g., using Markdown for READMEs and code blocks for code).";
     const githubChat = createChat(systemInstruction);
-    // @ts-ignore - a little hack to use a different model for this specific chat
-    githubChat.model = 'gemini-2.5-pro'; 
-    setChat(githubChat);
-    setMessages([{ role: 'model', text: "Welcome to your GitHub Assistant! How can I help you today? You can ask me to 'create a README for a Python web app', 'write a commit message for fixing a bug in the login page', or 'generate a .gitignore for a Node.js project'." }]);
+    
+    if (githubChat) {
+      // @ts-ignore - a little hack to use a different model for this specific chat
+      githubChat.model = 'gemini-2.5-pro'; 
+      setChat(githubChat);
+      setMessages([{ role: 'model', text: "Welcome to your GitHub Assistant! How can I help you today? You can ask me to 'create a README for a Python web app', 'write a commit message for fixing a bug in the login page', or 'generate a .gitignore for a Node.js project'." }]);
+    } else {
+      setIsServiceAvailable(false);
+      setMessages([{ role: 'model', text: "Sorry, the GitHub Assistant is currently unavailable. The API Key may not be configured for this website." }]);
+    }
   }, []);
 
   const scrollToBottom = () => {
@@ -54,7 +62,8 @@ const GitHubAssistant: React.FC = () => {
       console.error('Error sending message:', error);
        setMessages(prev => {
           const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = 'Sorry, I encountered an error. Please try again.';
+          const errorMessage = error instanceof Error ? error.message : 'Sorry, I encountered an error. Please try again.';
+          newMessages[newMessages.length - 1].text = errorMessage;
           return newMessages;
       });
     } finally {
@@ -88,12 +97,12 @@ const GitHubAssistant: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSend(); }}}
-            placeholder="Ask for a README, commit message, .gitignore file..."
+            placeholder={isServiceAvailable ? "Ask for a README, commit message, .gitignore file..." : "Service unavailable"}
             className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none resize-none h-12 max-h-40"
             rows={1}
-            disabled={isLoading}
+            disabled={isLoading || !isServiceAvailable}
           />
-          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1 self-end">
+          <button onClick={handleSend} disabled={isLoading || !input.trim() || !isServiceAvailable} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1 self-end">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>

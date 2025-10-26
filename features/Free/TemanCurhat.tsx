@@ -14,11 +14,19 @@ const TemanCurhat: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [isServiceAvailable, setIsServiceAvailable] = useState(true);
 
   useEffect(() => {
     const systemInstruction = "Kamu adalah Teman Curhat, seorang AI yang ramah, suportif, dan penuh empati. Tugasmu adalah mendengarkan keluh kesah pengguna, memberikan semangat, dan menjadi teman ngobrol yang baik. Jangan memberi nasihat medis atau finansial. Gunakan bahasa Indonesia yang santai dan akrab.";
-    setChat(createChat(systemInstruction));
-    setMessages([{ role: 'model', text: 'Halo! Ada yang mau diceritain? Aku di sini buat dengerin kok.' }]);
+    const newChat = createChat(systemInstruction);
+    
+    if (newChat) {
+      setChat(newChat);
+      setMessages([{ role: 'model', text: 'Halo! Ada yang mau diceritain? Aku di sini buat dengerin kok.' }]);
+    } else {
+      setIsServiceAvailable(false);
+      setMessages([{ role: 'model', text: 'Maaf, layanan chat AI saat ini tidak tersedia. Kemungkinan API Key belum dikonfigurasi untuk website ini.' }]);
+    }
   }, []);
 
   const scrollToBottom = () => {
@@ -50,7 +58,8 @@ const TemanCurhat: React.FC = () => {
       console.error('Error sending message:', error);
       setMessages(prev => {
           const newMessages = [...prev];
-          newMessages[newMessages.length - 1].text = 'Oops, sepertinya ada masalah. Coba lagi nanti ya.';
+          const errorMessage = error instanceof Error ? error.message : 'Oops, sepertinya ada masalah. Coba lagi nanti ya.';
+          newMessages[newMessages.length - 1].text = errorMessage;
           return newMessages;
       });
     } finally {
@@ -92,11 +101,11 @@ const TemanCurhat: React.FC = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
-            placeholder="Ketik ceritamu di sini..."
+            placeholder={isServiceAvailable ? "Ketik ceritamu di sini..." : "Layanan tidak tersedia"}
             className="flex-1 bg-transparent px-4 py-3 text-white placeholder-zinc-500 focus:outline-none"
-            disabled={isLoading}
+            disabled={isLoading || !isServiceAvailable}
           />
-          <button onClick={handleSend} disabled={isLoading || !input.trim()} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
+          <button onClick={handleSend} disabled={isLoading || !input.trim() || !isServiceAvailable} className="p-3 text-zinc-400 hover:text-violet-400 disabled:text-zinc-600 disabled:cursor-not-allowed transition-colors mr-1">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
               <path d="M3.478 2.404a.75.75 0 0 0-.926.941l2.432 7.905H13.5a.75.75 0 0 1 0 1.5H4.984l-2.432 7.905a.75.75 0 0 0 .926.94 60.519 60.519 0 0 0 18.445-8.986.75.75 0 0 0 0-1.218A60.517 60.517 0 0 0 3.478 2.404Z" />
             </svg>
