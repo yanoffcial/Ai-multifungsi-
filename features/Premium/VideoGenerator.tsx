@@ -116,12 +116,14 @@ const VideoGenerator: React.FC = () => {
               if (pollerRef.current) clearInterval(pollerRef.current);
               
               const downloadLink = updatedOperation.response?.generatedVideos?.[0]?.video?.uri;
-              if (downloadLink && process.env.API_KEY) {
-                  const response = await fetch(`${downloadLink}&key=${process.env.API_KEY}`);
+              const apiKey = (typeof process !== 'undefined' && process.env?.API_KEY) || undefined;
+              
+              if (downloadLink && apiKey) {
+                  const response = await fetch(`${downloadLink}&key=${apiKey}`);
                   const blob = await response.blob();
                   setGeneratedVideoUrl(URL.createObjectURL(blob));
               } else {
-                  setError("Video generated, but failed to retrieve the download link.");
+                  setError("Video generated, but failed to retrieve the download link. API key may be missing.");
               }
               setIsLoading(false);
           }

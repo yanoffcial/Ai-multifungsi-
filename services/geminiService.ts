@@ -1,7 +1,7 @@
 import { GoogleGenAI, GenerateContentResponse, Chat, LiveServerMessage, Modality, Type, FunctionDeclaration, GenerateVideosOperation } from "@google/genai";
 
 // This is a placeholder. In a real environment, the API key is set securely.
-const API_KEY = process.env.API_KEY;
+const API_KEY = (typeof process !== 'undefined' && process.env?.API_KEY) || undefined;
 
 const getGenAI = () => {
     if (!API_KEY) {
